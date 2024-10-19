@@ -1,9 +1,7 @@
-version: "3.8"
 services:
-
   # Applications
-
   catalog-service:
+    build: /Users/kdw/Desktop/하이미디어/cloud-native-spring-in-action/catalog-service
     depends_on:
       - polar-mysql
     image: "catalog-service"
@@ -22,6 +20,7 @@ services:
       - SPRING_PROFILES_ACTIVE=testdata
   
   config-service:
+    build: /Users/kdw/Desktop/하이미디어/cloud-native-spring-in-action/config-service
     image: "config-service"
     container_name: "config-service"
     ports:
@@ -35,7 +34,6 @@ services:
       - BPL_DEBUG_PORT=9888
 
   # Backing Services
-
   polar-mysql:
     image: "mysql:latest" # 최신 버전으로 업데이트
     container_name: "polar-mysql"
