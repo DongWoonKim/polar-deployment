@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: polar-mysql
+  labels:
+    db: polar-mysql
+spec:
+  selector:
+    matchLabels:
+      db: polar-mysql
+  template:
+    metadata:
+      labels:
+        db: polar-mysql
+    spec:
+      containers:
+        - name: polar-mysql
+          image: mysql:latest
+          env:
+            - name: MYSQL_USER
+              value: user
+            - name: MYSQL_PASSWORD
+              value: 1234 
+            - name: MYSQL_DATABASE
+              value: catalog
+            - name: MYSQL_ROOT_PASSWORD
+              value: 1234
+          resources:
+            requests:
+              cpu: 100m
+              memory: 60Mi
+            limits:
+              cpu: 200m
+              memory: 120Mi
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: polar-mysql
+  labels:
+    db: polar-mysql
+spec:
+  type: ClusterIP
+  selector:
+    db: polar-mysql
+  ports:
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306
+      nodePort: 3307 # 포트 포워딩을 위해 NodePort를 사용할 수도 있음
