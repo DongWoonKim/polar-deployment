@@ -44,3 +44,5 @@ services:
       - MYSQL_DATABASE=catalog
       - MYSQL_USER=catalog_user       # 사용자 설정 추가
       - MYSQL_PASSWORD=1234
+    volumes:
+      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
