@@ -18,6 +18,24 @@ services:
       - SPRING_CLOUD_CONFIG_URI=http://config-service:8888
       - SPRING_DATASOURCE_URL=jdbc:mysql://polar-mysql:3306/catalog?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&characterEncoding=UTF-8
       - SPRING_PROFILES_ACTIVE=testdata
+
+  order-service:
+    build: /Users/kdw/Desktop/하이미디어/cloud-native-spring-in-action/order-service
+    depends_on:
+      - polar-mysql
+    image: "order-service"
+    container_name: "order-service"
+    ports:
+      - 9002:9002
+      - 8002:8002
+    environment:
+      # Buildpacks environment variable to enable debug through a socket on port 8002
+      - BPL_DEBUG_ENABLED=true
+      - BPL_DEBUG_PORT=8002
+      - POLAR_CATALOG_SERVICE_URI=http://catalog-service:9001
+      - SPRING_CLOUD_CONFIG_URI=http://config-service:8888
+      - SPRING_R2DBC_URL=r2dbc:mysql://polar-mysql:3306/order
+      - SPRING_FLYWAY_URL=jdbc:mysql://polar-mysql:3306/order
   
   config-service:
     build: /Users/kdw/Desktop/하이미디어/cloud-native-spring-in-action/config-service
@@ -41,7 +59,7 @@ services:
       - 3307:3306
     environment:
       - MYSQL_ROOT_PASSWORD=1234
-      - MYSQL_DATABASE=catalog
+      # - MYSQL_DATABASE=catalog
       - MYSQL_USER=catalog_user       # 사용자 설정 추가
       - MYSQL_PASSWORD=1234
     volumes:
